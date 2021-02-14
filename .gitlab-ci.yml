@@ -1,0 +1,28 @@
+image: node:lts-alpine
+
+stages:
+    - setup
+    - test
+
+setup:
+    stage: setup
+    script:
+        - yarn install
+    cache:
+        key:
+            files:
+                - yarn.lock
+        paths:
+            - node_modules
+
+test:
+    stage: test
+    script:
+        - yarn test
+    cache:
+        key:
+            files:
+                - yarn.lock
+        paths:
+            - node_modules
+        policy: pull

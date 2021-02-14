@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+
+# Jest coverage
+coverage/
+
+# Yarn
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
