@@ -11,3 +11,9 @@ yarn-error.log*
 # IDE
 .idea/
 .vscode/
+
+# stryker temp files
+.stryker-tmp
+
+# reports
+reports/
