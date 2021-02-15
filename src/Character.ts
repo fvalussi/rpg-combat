@@ -5,12 +5,16 @@ export class Character {
 
     static create(options?: { health: number }) {
         const character = new Character()
-        if (options) character.health = Health.at(options?.health)
+        if (options) {
+            const initialHealth = Health.at(options.health)
+            character.health = initialHealth
+        }
         return character
     }
 
     isAlive() {
-        return !this.health.equals(Health.at(0))
+        const deadHealth = Health.at(0)
+        return !this.health.equals(deadHealth)
     }
 
     hasLevel(level: number) {
@@ -22,10 +26,18 @@ export class Character {
     }
 
     attack(target: Character) {
-        target.health.decrease()
+        target.beHurt()
     }
 
     heal(injured: Character) {
-        injured.health.increase()
+        injured.beHealed()
+    }
+
+    private beHurt() {
+        this.health.decrease()
+    }
+
+    private beHealed() {
+        this.health.increase()
     }
 }
