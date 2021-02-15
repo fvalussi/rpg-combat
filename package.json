@@ -5,6 +5,7 @@
     "scripts": {
         "format": "yarn prettier --write .",
         "test": "jest",
+        "test:coverage": "jest --coverage",
         "test:mutation": "dotenv stryker run",
         "test:watch": "jest --watchAll"
     },
