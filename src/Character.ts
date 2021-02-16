@@ -1,43 +1,82 @@
-import { Health } from './Health'
+import { HealthPoints } from './HealthPoints'
+import { Level } from './Level'
 
 export class Character {
-    private health: Health = Health.at(1000)
+    private health: HealthPoints = Character.getInitialHealth()
+    private level: Level = Character.getInitialLevel()
 
-    static create(options?: { health: number }) {
+    static create() {
+        return new Character()
+    }
+
+    static createWithHealth(health: number) {
         const character = new Character()
-        if (options) {
-            const initialHealth = Health.at(options.health)
-            character.health = initialHealth
-        }
+        character.health = HealthPoints.at(health)
+        return character
+    }
+
+    static createWithLevel(level: number) {
+        const character = new Character()
+        character.level = Level.at(level)
         return character
     }
 
     isAlive() {
-        const deadHealth = Health.at(0)
+        const deadHealth = HealthPoints.at(0)
         return !this.health.equals(deadHealth)
     }
 
-    hasLevel(level: number) {
-        return true
+    hasLevel(level: Level) {
+        return this.level.equals(level)
     }
 
-    healthIs(health: Health) {
+    healthIs(health: HealthPoints) {
         return this.health.equals(health)
     }
 
     attack(target: Character) {
-        target.beHurt()
+        if (target === this) {
+            return
+        }
+        const damage = this.calculateDamage(target)
+        target.reduceHealth(damage)
     }
 
-    heal(injured: Character) {
-        injured.beHealed()
+    heal() {
+        if (this.isAlive()) {
+            this.health.increase()
+        }
     }
 
-    private beHurt() {
-        this.health.decrease()
+    private calculateDamage(target: Character) {
+        const damage = Character.getBaseDamage()
+        if (target.isMoreExperienced(this)) {
+            return damage.half()
+        }
+        if (this.isMoreExperienced(target)) {
+            return damage.twice()
+        }
+        return damage
     }
 
-    private beHealed() {
-        this.health.increase()
+    private isMoreExperienced(character: Character) {
+        const characterLevel = character.level
+        return this.level.greaterByFiveLevels(characterLevel)
+    }
+
+    private reduceHealth(health: HealthPoints) {
+        this.health.decrease(health)
+    }
+
+    private static getBaseDamage() {
+        return HealthPoints.at(1)
+    }
+
+    private static getInitialHealth() {
+        return HealthPoints.at(1000)
+    }
+
+    private static getInitialLevel() {
+        return Level.at(1)
     }
 }
