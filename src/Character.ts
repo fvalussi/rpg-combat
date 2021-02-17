@@ -1,12 +1,22 @@
 import { HealthPoints } from './HealthPoints'
 import { Level } from './Level'
+import { AttackType } from './AttackType'
+import { Melee } from './Melee'
+import { Ranged } from './Ranged'
 
 export class Character {
     private health: HealthPoints = Character.getInitialHealth()
     private level: Level = Character.getInitialLevel()
+    private attackType: AttackType = Character.meleeAttackType()
 
     static create() {
         return new Character()
+    }
+
+    static createRanged() {
+        const character = new Character()
+        character.attackType = Character.rangedAttackType()
+        return character
     }
 
     static createWithHealth(health: number) {
@@ -34,8 +44,8 @@ export class Character {
         return this.health.equals(health)
     }
 
-    attack(target: Character) {
-        if (target === this) {
+    attack(target: Character, distance: number) {
+        if (target === this || this.attackType.outOfRange(distance)) {
             return
         }
         const damage = this.calculateDamage(target)
@@ -51,10 +61,10 @@ export class Character {
     private calculateDamage(target: Character) {
         const damage = Character.getBaseDamage()
         if (target.isMoreExperienced(this)) {
-            return damage.half()
+            return damage.reduced()
         }
         if (this.isMoreExperienced(target)) {
-            return damage.twice()
+            return damage.increased()
         }
         return damage
     }
@@ -78,5 +88,13 @@ export class Character {
 
     private static getInitialLevel() {
         return Level.at(1)
+    }
+
+    private static meleeAttackType() {
+        return new Melee()
+    }
+
+    private static rangedAttackType() {
+        return new Ranged()
     }
 }

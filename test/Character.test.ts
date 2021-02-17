@@ -29,7 +29,7 @@ describe('Character', () => {
         const character = Character.create()
         const victim = Character.create()
 
-        character.attack(victim)
+        when_Character_attacks(character, victim)
 
         expect(victim.healthIs(HealthPoints.at(999))).toBe(true)
     })
@@ -38,7 +38,7 @@ describe('Character', () => {
         const character = Character.create()
         const injured_victim = Character.createWithHealth(1)
 
-        character.attack(injured_victim)
+        when_Character_attacks(character, injured_victim)
 
         expect(injured_victim.healthIs(HealthPoints.at(0))).toBe(true)
         expect(injured_victim.isAlive()).toBe(false)
@@ -48,7 +48,7 @@ describe('Character', () => {
         const character = Character.create()
         const dead_victim = Character.createWithHealth(0)
 
-        character.attack(dead_victim)
+        when_Character_attacks(character, dead_victim)
 
         expect(dead_victim.healthIs(HealthPoints.at(0))).toBe(true)
     })
@@ -80,7 +80,7 @@ describe('Character', () => {
     it('A Character cannot Deal Damage to itself', () => {
         const character = Character.create()
 
-        character.attack(character)
+        when_Character_attacks(character, character)
 
         expect(character.healthIs(HealthPoints.at(1000))).toBe(true)
     })
@@ -90,7 +90,7 @@ describe('Character', () => {
             const character = Character.create()
             const target = Character.createWithLevel(6)
 
-            character.attack(target)
+            when_Character_attacks(character, target)
 
             expect(target.healthIs(HealthPoints.at(999.5))).toBe(true)
         })
@@ -99,9 +99,64 @@ describe('Character', () => {
             const character = Character.createWithLevel(6)
             const target = Character.create()
 
-            character.attack(target)
+            when_Character_attacks(character, target)
 
             expect(target.healthIs(HealthPoints.at(998))).toBe(true)
         })
     })
+
+    describe('Characters have an attack Max Range and Characters must be in range to deal damage to a target', () => {
+        it('Melee fighters have a range of 2 meters', () => {
+            const character = Character.create()
+            const target = Character.create()
+            const distance = 3
+
+            when_Character_attacks_from_Distance(character, target, distance)
+
+            expect(target.healthIs(HealthPoints.at(1000))).toBe(true)
+        })
+
+        it('Melee fighters have a range of 2 meters BIS', () => {
+            const character = Character.create()
+            const target = Character.create()
+            const distance = 2
+
+            character.attack(target, distance)
+
+            expect(target.healthIs(HealthPoints.at(999))).toBe(true)
+        })
+
+        it('Ranged fighters have a range of 20 meters', () => {
+            const character = Character.createRanged()
+            const target = Character.create()
+            const distance = 20
+
+            character.attack(target, distance)
+
+            expect(target.healthIs(HealthPoints.at(999))).toBe(true)
+        })
+
+        it('Ranged fighters have a range of 20 meters BIS', () => {
+            const character = Character.createRanged()
+            const target = Character.create()
+            const distance = 21
+
+            character.attack(target, distance)
+
+            expect(target.healthIs(HealthPoints.at(1000))).toBe(true)
+        })
+    })
+
+    function when_Character_attacks_from_Distance(
+        character: Character,
+        victim: Character,
+        distance: number
+    ) {
+        character.attack(victim, distance)
+    }
+
+    function when_Character_attacks(character: Character, victim: Character) {
+        const distance = 1
+        character.attack(victim, distance)
+    }
 })

@@ -21,11 +21,11 @@ export class HealthPoints {
         }
     }
 
-    half(): HealthPoints {
+    reduced(): HealthPoints {
         return HealthPoints.at(this.value / 2)
     }
 
-    twice() {
+    increased() {
         return HealthPoints.at(this.value * 2)
     }
 }
