@@ -1,13 +1,14 @@
 import { HealthPoints } from './HealthPoints'
 import { Level } from './Level'
-import { AttackType } from './AttackType'
+import { Weapon } from './Weapon'
 import { Melee } from './Melee'
 import { Ranged } from './Ranged'
+import { Distance } from './Distance'
 
 export class Character {
     private health: HealthPoints = Character.getInitialHealth()
     private level: Level = Character.getInitialLevel()
-    private attackType: AttackType = Character.meleeAttackType()
+    private weapon: Weapon = Character.meleeAttackType()
 
     static create() {
         return new Character()
@@ -15,19 +16,19 @@ export class Character {
 
     static createRanged() {
         const character = new Character()
-        character.attackType = Character.rangedAttackType()
+        character.weapon = Character.rangedAttackType()
         return character
     }
 
-    static createWithHealth(health: number) {
+    static createWithHealth(health: HealthPoints) {
         const character = new Character()
-        character.health = HealthPoints.at(health)
+        character.health = health
         return character
     }
 
-    static createWithLevel(level: number) {
+    static createWithLevel(level: Level) {
         const character = new Character()
-        character.level = Level.at(level)
+        character.level = level
         return character
     }
 
@@ -44,12 +45,12 @@ export class Character {
         return this.health.equals(health)
     }
 
-    attack(target: Character, distance: number) {
-        if (target === this || this.attackType.outOfRange(distance)) {
+    attack(character: Character, distance: Distance) {
+        if (character === this || this.weapon.outOfRange(distance)) {
             return
         }
-        const damage = this.calculateDamage(target)
-        target.reduceHealth(damage)
+        const damage = this.calculateDamage(character)
+        character.reduceHealth(damage)
     }
 
     heal() {
@@ -58,12 +59,12 @@ export class Character {
         }
     }
 
-    private calculateDamage(target: Character) {
+    private calculateDamage(character: Character) {
         const damage = Character.getBaseDamage()
-        if (target.isMoreExperienced(this)) {
+        if (character.isMoreExperienced(this)) {
             return damage.reduced()
         }
-        if (this.isMoreExperienced(target)) {
+        if (this.isMoreExperienced(character)) {
             return damage.increased()
         }
         return damage

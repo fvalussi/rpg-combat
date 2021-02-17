@@ -1,6 +1,7 @@
 import { Character } from '../src/Character'
 import { HealthPoints } from '../src/HealthPoints'
 import { Level } from '../src/Level'
+import { Distance } from '../src/Distance'
 
 describe('Character', () => {
     describe('All Characters, when created, have', () => {
@@ -36,7 +37,7 @@ describe('Character', () => {
 
     it('When damage received exceeds current HealthPoints, HealthPoints becomes 0 and the character dies', () => {
         const character = Character.create()
-        const injured_victim = Character.createWithHealth(1)
+        const injured_victim = Character.createWithHealth(HealthPoints.at(1))
 
         when_Character_attacks(character, injured_victim)
 
@@ -46,7 +47,7 @@ describe('Character', () => {
 
     it('Character minimal health is 0', () => {
         const character = Character.create()
-        const dead_victim = Character.createWithHealth(0)
+        const dead_victim = Character.createWithHealth(HealthPoints.at(0))
 
         when_Character_attacks(character, dead_victim)
 
@@ -54,7 +55,7 @@ describe('Character', () => {
     })
 
     it('A Character can only Heal itself', () => {
-        const character = Character.createWithHealth(999)
+        const character = Character.createWithHealth(HealthPoints.at(999))
 
         character.heal()
 
@@ -62,7 +63,7 @@ describe('Character', () => {
     })
 
     it('Dead characters cannot be healed', () => {
-        const character = Character.createWithHealth(0)
+        const character = Character.createWithHealth(HealthPoints.at(0))
 
         character.heal()
 
@@ -70,7 +71,7 @@ describe('Character', () => {
     })
 
     it('Healing cannot raise health above 1000', () => {
-        const character = Character.createWithHealth(1000)
+        const character = Character.createWithHealth(HealthPoints.at(1000))
 
         character.heal()
 
@@ -88,7 +89,7 @@ describe('Character', () => {
     describe('When dealing damage', () => {
         it('If the target is 5 or more Levels above the attacker, Damage is reduced by 50%', () => {
             const character = Character.create()
-            const target = Character.createWithLevel(6)
+            const target = Character.createWithLevel(Level.at(6))
 
             when_Character_attacks(character, target)
 
@@ -96,7 +97,7 @@ describe('Character', () => {
         })
 
         it('If the target is 5 or more levels below the attacker, Damage is increased by 50%', () => {
-            const character = Character.createWithLevel(6)
+            const character = Character.createWithLevel(Level.at(6))
             const target = Character.create()
 
             when_Character_attacks(character, target)
@@ -109,7 +110,7 @@ describe('Character', () => {
         it('Melee fighters have a range of 2 meters', () => {
             const character = Character.create()
             const target = Character.create()
-            const distance = 3
+            const distance = Distance.of(3)
 
             when_Character_attacks_from_Distance(character, target, distance)
 
@@ -119,7 +120,7 @@ describe('Character', () => {
         it('Melee fighters have a range of 2 meters BIS', () => {
             const character = Character.create()
             const target = Character.create()
-            const distance = 2
+            const distance = Distance.of(2)
 
             character.attack(target, distance)
 
@@ -129,7 +130,7 @@ describe('Character', () => {
         it('Ranged fighters have a range of 20 meters', () => {
             const character = Character.createRanged()
             const target = Character.create()
-            const distance = 20
+            const distance = Distance.of(20)
 
             character.attack(target, distance)
 
@@ -139,7 +140,7 @@ describe('Character', () => {
         it('Ranged fighters have a range of 20 meters BIS', () => {
             const character = Character.createRanged()
             const target = Character.create()
-            const distance = 21
+            const distance = Distance.of(21)
 
             character.attack(target, distance)
 
@@ -150,13 +151,14 @@ describe('Character', () => {
     function when_Character_attacks_from_Distance(
         character: Character,
         victim: Character,
-        distance: number
+        distance: Distance
     ) {
         character.attack(victim, distance)
     }
 
     function when_Character_attacks(character: Character, victim: Character) {
-        const distance = 1
+        const distance = Distance.of(1)
+        Distance.of(1)
         character.attack(victim, distance)
     }
 })

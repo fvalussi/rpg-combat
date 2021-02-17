@@ -1,7 +1,7 @@
 export class HealthPoints {
     private constructor(private value: number) {}
 
-    static at(amount: number): HealthPoints {
+    static at(amount: number) {
         return new HealthPoints(amount)
     }
 
@@ -21,7 +21,7 @@ export class HealthPoints {
         }
     }
 
-    reduced(): HealthPoints {
+    reduced() {
         return HealthPoints.at(this.value / 2)
     }
 
