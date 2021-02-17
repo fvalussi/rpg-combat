@@ -1,7 +1,8 @@
 # RPG Combat Kata
 
-[![Pipeline status](https://gitlab.com/fvalussi/rpg-combat-kata/badges/master/pipeline.svg)](https://gitlab.com/fvalussi/rpg-combat-kata/-/commits/master)
-[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffvalussi%2Frpg-combat%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/fvalussi/rpg-combat/master)
+[![pipeline status](https://gitlab.com/fvalussi/rpg-combat-kata/badges/master/pipeline.svg)](https://gitlab.com/fvalussi/rpg-combat-kata/-/commits/master)
+[![coverage report](https://gitlab.com/fvalussi/rpg-combat-kata/badges/master/coverage.svg)](https://gitlab.com/fvalussi/rpg-combat-kata/-/commits/master)
+[![mutation report](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Ffvalussi%2Frpg-combat%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/fvalussi/rpg-combat/master)
 
 ## Rules
 
