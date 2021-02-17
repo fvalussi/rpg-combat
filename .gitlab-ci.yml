@@ -26,3 +26,20 @@ test:
         paths:
             - node_modules
         policy: pull
+
+coverage:
+    stage: test
+    script:
+        - yarn test:coverage
+    artifacts:
+        when: always
+        paths:
+            - reports/coverage
+        expire_in: 30 days
+    cache:
+        key:
+            files:
+                - yarn.lock
+        paths:
+            - node_modules
+        policy: pull

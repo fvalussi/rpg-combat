@@ -158,7 +158,6 @@ describe('Character', () => {
 
     function when_Character_attacks(character: Character, victim: Character) {
         const distance = Distance.of(1)
-        Distance.of(1)
         character.attack(victim, distance)
     }
 })
