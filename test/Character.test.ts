@@ -2,6 +2,7 @@ import { Character } from '../src/Character'
 import { HealthPoints } from '../src/HealthPoints'
 import { Level } from '../src/Level'
 import { Distance } from '../src/Distance'
+import { Faction } from '../src/Faction'
 
 describe('Character', () => {
     describe('All Characters, when created, have', () => {
@@ -57,7 +58,7 @@ describe('Character', () => {
     it('A Character can only Heal itself', () => {
         const character = Character.createWithHealth(HealthPoints.at(999))
 
-        character.heal()
+        character.heal(character)
 
         expect(character.healthIs(HealthPoints.at(1000))).toBe(true)
     })
@@ -65,7 +66,7 @@ describe('Character', () => {
     it('Dead characters cannot be healed', () => {
         const character = Character.createWithHealth(HealthPoints.at(0))
 
-        character.heal()
+        character.heal(character)
 
         expect(character.healthIs(HealthPoints.at(0))).toBe(true)
     })
@@ -73,7 +74,7 @@ describe('Character', () => {
     it('Healing cannot raise health above 1000', () => {
         const character = Character.createWithHealth(HealthPoints.at(1000))
 
-        character.heal()
+        character.heal(character)
 
         expect(character.healthIs(HealthPoints.at(1000))).toBe(true)
     })
@@ -145,6 +146,68 @@ describe('Character', () => {
             character.attack(target, distance)
 
             expect(target.healthIs(HealthPoints.at(1000))).toBe(true)
+        })
+    })
+
+    describe('Characters may belong to one or more Factions', () => {
+        it('Newly created Characters belong to no Faction', () => {
+            const character = Character.create()
+            const faction = Faction.named('Orcs')
+
+            expect(character.belongsToFaction(faction)).toBe(false)
+        })
+
+        it('A Character may Join a Faction', () => {
+            const character = Character.create()
+            const faction = Faction.named('Orcs')
+
+            character.joinFaction(faction)
+
+            expect(character.belongsToFaction(faction)).toBe(true)
+        })
+
+        it('A Character may Leave a Faction', () => {
+            const character = Character.create()
+            const faction = Faction.named('Orcs')
+            character.joinFaction(faction)
+
+            character.leaveFaction(faction)
+
+            expect(character.belongsToFaction(faction)).toBe(false)
+        })
+
+        it('Players belonging to the same Faction are considered Allies', () => {
+            const character = Character.create()
+            const ally = Character.create()
+            const faction = Faction.named('Orcs')
+            character.joinFaction(faction)
+            ally.joinFaction(faction)
+
+            expect(character.isAlliedWith(ally)).toBe(true)
+        })
+
+        it('Allies cannot Deal Damage to one another', () => {
+            const character = Character.create()
+            const ally = Character.create()
+            const faction = Faction.named('Orcs')
+            character.joinFaction(faction)
+            ally.joinFaction(faction)
+
+            when_Character_attacks(character, ally)
+
+            expect(ally.healthIs(HealthPoints.at(1000))).toBe(true)
+        })
+
+        it('Allies can Heal one another', () => {
+            const character = Character.create()
+            const ally = Character.createWithHealth(HealthPoints.at(900))
+            const faction = Faction.named('Orcs')
+            character.joinFaction(faction)
+            ally.joinFaction(faction)
+
+            character.heal(ally)
+
+            expect(ally.healthIs(HealthPoints.at(901))).toBe(true)
         })
     })
 

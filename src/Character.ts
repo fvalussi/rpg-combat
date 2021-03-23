@@ -4,11 +4,13 @@ import { Weapon } from './Weapon'
 import { Melee } from './Melee'
 import { Ranged } from './Ranged'
 import { Distance } from './Distance'
+import { Faction } from './Faction'
 
 export class Character {
     private health: HealthPoints = Character.getInitialHealth()
     private level: Level = Character.getInitialLevel()
     private weapon: Weapon = Character.meleeAttackType()
+    private factions: Faction[] = []
 
     static create() {
         return new Character()
@@ -46,16 +48,23 @@ export class Character {
     }
 
     attack(character: Character, distance: Distance) {
-        if (character === this || this.weapon.outOfRange(distance)) {
+        if (
+            character === this ||
+            this.weapon.outOfRange(distance) ||
+            this.isAlliedWith(character)
+        ) {
             return
         }
         const damage = this.calculateDamage(character)
         character.reduceHealth(damage)
     }
 
-    heal() {
-        if (this.isAlive()) {
-            this.health.increase()
+    heal(character: Character) {
+        if (
+            character.isAlive() &&
+            (this.isAlliedWith(character) || this == character)
+        ) {
+            character.health.increase()
         }
     }
 
@@ -97,5 +106,29 @@ export class Character {
 
     private static rangedAttackType() {
         return new Ranged()
+    }
+
+    belongsToFaction(faction: Faction) {
+        return faction.includes(this)
+    }
+
+    joinFaction(faction: Faction) {
+        faction.add(this)
+        this.factions.push(faction)
+    }
+
+    leaveFaction(faction: Faction) {
+        faction.remove(this)
+        const index = this.factions.indexOf(faction)
+        this.factions.splice(index, 1)
+    }
+
+    isAlliedWith(character: Character) {
+        const belongsToFaction:
+            | Faction
+            | undefined = this.factions.find((f: Faction) =>
+            f.includes(character)
+        )
+        return !!belongsToFaction
     }
 }
