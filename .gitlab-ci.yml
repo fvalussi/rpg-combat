@@ -43,20 +43,3 @@ coverage:
         paths:
             - node_modules
         policy: pull
-
-mutation:
-    stage: test
-    script:
-        - yarn test:mutation
-    artifacts:
-        when: always
-        paths:
-            - reports/mutation
-        expire_in: 30 days
-    cache:
-        key:
-            files:
-                - yarn.lock
-        paths:
-            - node_modules
-        policy: pull
